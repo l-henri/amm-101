@@ -228,14 +228,6 @@ contract Evaluator
 	{
 		// Assigning passed ERC20 as student ERC20
 		studentErc20[msg.sender] = studentErc20_;
-		if (!exerciceProgression[msg.sender][5])
-		{
-			exerciceProgression[msg.sender][5] = true;
-			// Setup points
-			TDAMM.distributeTokens(msg.sender, 2);
-			// Creating contract points
-			TDAMM.distributeTokens(msg.sender, 1);
-		}
 			
 	}
 
