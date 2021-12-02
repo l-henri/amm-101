@@ -29,12 +29,15 @@ contract Evaluator
  	mapping(address => bool) public hasBeenPaired;
 
  	event newRandomTickerAndSupply(string ticker, uint256 supply);
- 	event constructedCorrectly(address erc20Address);
-	constructor(ERC20TD _TDAMM) 
+ 	event constructedCorrectly(address erc20Address, address dummyTokenAddress, address uniFactoryAddress, address wethAddress);
+	constructor(ERC20TD _TDAMM, ERC20 _dummyToken, IUniswapV2Factory _uniswapV2Factory, address _WETH) 
 	public 
 	{
 		TDAMM = _TDAMM;
-		emit constructedCorrectly(address(TDAMM));
+		dummyToken = _dummyToken;
+		uniswapV2Factory = _uniswapV2Factory;
+		WETH = _WETH;
+		emit constructedCorrectly(address(TDAMM), address(_dummyToken), address(_uniswapV2Factory), _WETH);
 
 	}
 
