@@ -22,7 +22,7 @@ Your objective is to gather as many TD-AMM-101 points as possible. Please note :
 
 ### Getting to work
 - Clone the repo on your machine
-- Install the required packages `npm install truffle`, `npm install @openzeppelin/contracts@3.4.1` , `npm install @truffle/hdwallet-provider`
+- Install the required packages `npm install truffle`, `npm install @openzeppelin/contracts@3.4.1` , `npm install @truffle/hdwallet-provider`, `npm i @supercharge/strings`
 - Rename `example-truffle-config.js` to `truffle-config.js` . That is now your truffle config file.
 - Configure a seed for deployment of contracts in your truffle config file
 - Register for an infura key and set it up in your truffle config file
