@@ -142,7 +142,79 @@ contract Evaluator
 
 	}
 
-	function ex8_contractCanProvideLiquidity()
+	function ex8_contractCanSwapVsEth()
+	public
+	{
+		// Retrieving address of pair from library
+		(address token0, address token1) = address(studentErc20[msg.sender]) < WETH ? (address(studentErc20[msg.sender]), WETH) : (WETH, address(studentErc20[msg.sender]));
+		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+
+		// Checking pair balance before calling exercice contract
+		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
+		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
+
+		// Checking caller balance before executing contract
+		uint initBalance = studentErc20[msg.sender].balanceOf(msg.sender);
+
+		// Calling student contract to tell him to provide liquidity
+		studentExercice[msg.sender].swapYourTokenForEth();
+
+		// Checking pair balance after calling exercice contract
+		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
+		require((reserve0 != reserve3) && (reserve1 != reserve4), "No liquidity change in your token's pool");
+
+		// Checking your token balance after calling the exercice
+		uint endBalance = studentErc20[msg.sender].balanceOf(msg.sender);
+		require(initBalance != endBalance, "You still have the same amont of tokens");
+
+		// Crediting points
+		if (!exerciceProgression[msg.sender][8])
+		{
+			exerciceProgression[msg.sender][8] = true;
+			// Creating ERC20
+			TDAMM.distributeTokens(msg.sender, 1);
+		}
+
+	}
+
+	function ex9_contractCanSwapVsDummyToken()
+	public
+	{
+		// Retrieving address of pair from library
+		(address token0, address token1) = address(studentErc20[msg.sender]) < address(dummyToken) ? (address(studentErc20[msg.sender]), address(dummyToken)) : (address(dummyToken), address(studentErc20[msg.sender]));
+		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+
+		// Checking pair balance before calling exercice contract
+		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
+		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
+		
+		// Checking caller balance before executing contract
+		uint initTokenBalance = studentErc20[msg.sender].balanceOf(msg.sender);
+		uint initDummyBalance = dummyToken.balanceOf(msg.sender);
+
+		// Calling student contract to tell him to provide liquidity
+		studentExercice[msg.sender].swapYourTokenForDummyToken();
+
+		// Checking pair balance after calling exercice contract
+		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
+		require((reserve0 < reserve3) && (reserve1 < reserve4), "No liquidity change in your token's pool");
+
+		// Checking your token balance after calling the exercice
+		uint endTokenBalance = studentErc20[msg.sender].balanceOf(msg.sender);
+		require(initTokenBalance != endTokenBalance, "You still have the same amont of tokens");
+		uint endDummyBalance = dummyToken.balanceOf(msg.sender);
+		require(initDummyBalance != endDummyBalance, "You still have the same amont of tokens");
+
+		// Crediting points
+		if (!exerciceProgression[msg.sender][9])
+		{
+			exerciceProgression[msg.sender][9] = true;
+			// Creating ERC20
+			TDAMM.distributeTokens(msg.sender, 2);
+		}
+
+	}
+	function ex10_contractCanProvideLiquidity()
 	public
 	{
 		// Retrieving address of pair from library
@@ -162,16 +234,16 @@ contract Evaluator
 		require((reserve0 < reserve3) && (reserve1 < reserve4), "No liquidity change in your token's pool");
 
 		// Crediting points
-		if (!exerciceProgression[msg.sender][8])
+		if (!exerciceProgression[msg.sender][10])
 		{
-			exerciceProgression[msg.sender][8] = true;
+			exerciceProgression[msg.sender][10] = true;
 			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 3);
+			TDAMM.distributeTokens(msg.sender, 2);
 		}
 
 	}
 
-	function ex9_contractCanWithdrawLiquidity()
+	function ex11_contractCanWithdrawLiquidity()
 	public
 	{
 		// Retrieving address of pair from library
@@ -191,11 +263,11 @@ contract Evaluator
 		require((reserve0 > reserve3) && (reserve1 > reserve4), "No liquidity change in your token's pool");
 
 		// Crediting points
-		if (!exerciceProgression[msg.sender][9])
+		if (!exerciceProgression[msg.sender][11])
 		{
-			exerciceProgression[msg.sender][9] = true;
+			exerciceProgression[msg.sender][11] = true;
 			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 4);
+			TDAMM.distributeTokens(msg.sender, 2);
 		}
 
 	}

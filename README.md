@@ -59,11 +59,16 @@ These points will be attributed manually if you do not manage to have your contr
 - Call `ex7_tokenIsTradableOnUniswap` to show your token is tradable on uniswap (5 pts)
 
 ### Uniswap integration
+You will need to interact with UniswapV2Router02 in order to complete this part. It can be found [here](https://rinkeby.etherscan.io/address/0x7a250d5630b4cf539739df2c5dacb4c659f2488d#writeContract)
+- Create a contract that can swap tokens in Uniswap in the WETH/Your token pool
+- Submit your contract address using `submitExercice()` (repeat as needed)
+- Prove your contract work by calling `ex8_contractCanSwapVsEth()` in the evaluator (1pts)
+- Create a contract that can swap tokens in Uniswap in the dummyToken/Your token pool
+- Prove your contract work by calling `ex9_contractCanSwapVsDummyToken()` in the evaluator (2pts)
 - Create a contract that can deposit tokens in Uniswap in the WETH/Your token pool
-- Submit your contract address using `submitExercice()` 
-- Prove your contract work by calling `ex8_contractCanProvideLiquidity()` in the evaluator (3pts)
+- Prove your contract work by calling `ex10_contractCanProvideLiquidity()` in the evaluator (2pts)
 - Create a contract that can withdraw tokens in Uniswap from the WETH/Your token pool
-- Prove your contract work by calling `ex9_contractCanWithdrawLiquidity()` in the evaluator (4pts)
+- Prove your contract work by calling `ex11_contractCanWithdrawLiquidity()` in the evaluator (2pts)
 
 ### Extra points
 Extra points if you find bugs / corrections this TD can benefit from, and submit a PR to make it better.  Ideas:
@@ -71,8 +76,8 @@ Extra points if you find bugs / corrections this TD can benefit from, and submit
 - Publish the code of the Evaluator on Etherscan using the "Verify and publish" functionnality 
 
 ## TD addresses
-- Points contracts `0xbf2353d3AFE8F`
-- Evaluator `0xcff8985FF63A2747605FB7ead26423e`
+- Points contracts `0xA59ADfDa4691B834c9b5bB169D5D0ee16e7D4c37`
+- Evaluator `0xb6eB42E175a8F0471bF4f7694f90cF629a0117bf`
 
 ## Installing
 

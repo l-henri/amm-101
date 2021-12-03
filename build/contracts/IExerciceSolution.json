@@ -14,27 +14,41 @@
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "swapYourTokenForDummyToken",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "swapYourTokenForEth",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
     }
   ],
-  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol\":\"IExerciceSolution\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol\":{\"keccak256\":\"0x4d4e27bdbfb1203eaddd93fb3312cea306484abb0a03d77d228a1d4256584835\",\"urls\":[\"bzz-raw://bda72a6fdd4f2712d5dc772cc26557e80492d5ec10610ce94135fa76fee08904\",\"dweb:/ipfs/Qmbj3DPpyKZ3mmjuAbP8fLSEdpV92AMXvbHzxxVgRR3sxd\"]},\"@openzeppelin/contracts/token/ERC20/IERC20.sol\":{\"keccak256\":\"0x5f02220344881ce43204ae4a6281145a67bc52c2bb1290a791857df3d19d78f5\",\"urls\":[\"bzz-raw://24427744bd3e6cb73c17010119af12a318289c0253a4d9acb8576c9fb3797b08\",\"dweb:/ipfs/QmTLDqpKRBuxGxRAmjgXt9AkXyACW3MtKzi7PYjm5iMfGC\"]}},\"version\":1}",
+  "metadata": "{\"compiler\":{\"version\":\"0.6.2+commit.bacdbe57\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"name\":\"addLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"swapYourTokenForDummyToken\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"swapYourTokenForEth\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"withdrawLiquidity\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"methods\":{}},\"userdoc\":{\"methods\":{}}},\"settings\":{\"compilationTarget\":{\"/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol\":\"IExerciceSolution\"},\"evmVersion\":\"istanbul\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\"},\"optimizer\":{\"enabled\":false,\"runs\":200},\"remappings\":[]},\"sources\":{\"/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol\":{\"keccak256\":\"0x51b87c9834de29ca8b8d93213d2c64ec609855be9bb6d827d8e48cdbc3f589c3\",\"urls\":[\"bzz-raw://cc605ea16707a21e3c4b1d84182a97ef3b273871d0e8b2aa630b87fbc4a4f440\",\"dweb:/ipfs/QmcuWdNQdqWZXrL8Kc3tESerSC8AK9t4RQFYwdbdhyuTzx\"]}},\"version\":1}",
   "bytecode": "0x",
   "deployedBytecode": "0x",
   "sourceMap": "",
   "deployedSourceMap": "",
-  "source": "pragma solidity ^0.6.0;\nimport \"@openzeppelin/contracts/token/ERC20/IERC20.sol\";\n\ninterface IExerciceSolution \n{\n\tfunction addLiquidity() external;\n\n\tfunction withdrawLiquidity() external;\n}\n",
+  "source": "pragma solidity ^0.6.0;\n\ninterface IExerciceSolution \n{\n\tfunction addLiquidity() external;\n\n\tfunction withdrawLiquidity() external;\n\n\tfunction swapYourTokenForDummyToken() external;\n\n\tfunction swapYourTokenForEth() external;\n}\n",
   "sourcePath": "/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol",
   "ast": {
     "absolutePath": "/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol",
     "exportedSymbols": {
       "IExerciceSolution": [
-        1056
+        1444
       ]
     },
-    "id": 1057,
+    "id": 1445,
     "nodeType": "SourceUnit",
     "nodes": [
       {
-        "id": 1048,
+        "id": 1431,
         "literals": [
           "solidity",
           "^",
@@ -45,26 +59,15 @@
         "src": "0:23:2"
       },
       {
-        "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-        "id": 1049,
-        "nodeType": "ImportDirective",
-        "scope": 1057,
-        "sourceUnit": 2726,
-        "src": "24:56:2",
-        "symbolAliases": [],
-        "unitAlias": ""
-      },
-      {
         "abstract": false,
         "baseContracts": [],
         "contractDependencies": [],
         "contractKind": "interface",
         "documentation": null,
         "fullyImplemented": false,
-        "id": 1056,
+        "id": 1444,
         "linearizedBaseContracts": [
-          1056
+          1444
         ],
         "name": "IExerciceSolution",
         "nodeType": "ContractDefinition",
@@ -73,7 +76,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "e8078d94",
-            "id": 1052,
+            "id": 1434,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -81,19 +84,19 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 1050,
+              "id": 1432,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "135:2:2"
+              "src": "78:2:2"
             },
             "returnParameters": {
-              "id": 1051,
+              "id": 1433,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "146:0:2"
+              "src": "89:0:2"
             },
-            "scope": 1056,
-            "src": "114:33:2",
+            "scope": 1444,
+            "src": "57:33:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
@@ -102,7 +105,7 @@
             "body": null,
             "documentation": null,
             "functionSelector": "7ea382c1",
-            "id": 1055,
+            "id": 1437,
             "implemented": false,
             "kind": "function",
             "modifiers": [],
@@ -110,36 +113,94 @@
             "nodeType": "FunctionDefinition",
             "overrides": null,
             "parameters": {
-              "id": 1053,
+              "id": 1435,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "176:2:2"
+              "src": "119:2:2"
             },
             "returnParameters": {
-              "id": 1054,
+              "id": 1436,
               "nodeType": "ParameterList",
               "parameters": [],
-              "src": "187:0:2"
+              "src": "130:0:2"
             },
-            "scope": 1056,
-            "src": "150:38:2",
+            "scope": 1444,
+            "src": "93:38:2",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "7c587b22",
+            "id": 1440,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "swapYourTokenForDummyToken",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1438,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "169:2:2"
+            },
+            "returnParameters": {
+              "id": 1439,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "180:0:2"
+            },
+            "scope": 1444,
+            "src": "134:47:2",
+            "stateMutability": "nonpayable",
+            "virtual": false,
+            "visibility": "external"
+          },
+          {
+            "body": null,
+            "documentation": null,
+            "functionSelector": "c4a85993",
+            "id": 1443,
+            "implemented": false,
+            "kind": "function",
+            "modifiers": [],
+            "name": "swapYourTokenForEth",
+            "nodeType": "FunctionDefinition",
+            "overrides": null,
+            "parameters": {
+              "id": 1441,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "212:2:2"
+            },
+            "returnParameters": {
+              "id": 1442,
+              "nodeType": "ParameterList",
+              "parameters": [],
+              "src": "223:0:2"
+            },
+            "scope": 1444,
+            "src": "184:40:2",
             "stateMutability": "nonpayable",
             "virtual": false,
             "visibility": "external"
           }
         ],
-        "scope": 1057,
-        "src": "82:108:2"
+        "scope": 1445,
+        "src": "25:201:2"
       }
     ],
-    "src": "0:191:2"
+    "src": "0:227:2"
   },
   "legacyAST": {
     "attributes": {
       "absolutePath": "/Users/henrilieutaud/Documents/Mes documents/ESILV/03 Blockchain Programmation/amm-101/contracts/IExerciceSolution.sol",
       "exportedSymbols": {
         "IExerciceSolution": [
-          1056
+          1444
         ]
       }
     },
@@ -153,24 +214,9 @@
             ".0"
           ]
         },
-        "id": 1048,
+        "id": 1431,
         "name": "PragmaDirective",
         "src": "0:23:2"
-      },
-      {
-        "attributes": {
-          "SourceUnit": 2726,
-          "absolutePath": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-          "file": "@openzeppelin/contracts/token/ERC20/IERC20.sol",
-          "scope": 1057,
-          "symbolAliases": [
-            null
-          ],
-          "unitAlias": ""
-        },
-        "id": 1049,
-        "name": "ImportDirective",
-        "src": "24:56:2"
       },
       {
         "attributes": {
@@ -185,10 +231,10 @@
           "documentation": null,
           "fullyImplemented": false,
           "linearizedBaseContracts": [
-            1056
+            1444
           ],
           "name": "IExerciceSolution",
-          "scope": 1057
+          "scope": 1445
         },
         "children": [
           {
@@ -204,7 +250,7 @@
               ],
               "name": "addLiquidity",
               "overrides": null,
-              "scope": 1056,
+              "scope": 1444,
               "stateMutability": "nonpayable",
               "virtual": false,
               "visibility": "external"
@@ -217,9 +263,9 @@
                   ]
                 },
                 "children": [],
-                "id": 1050,
+                "id": 1432,
                 "name": "ParameterList",
-                "src": "135:2:2"
+                "src": "78:2:2"
               },
               {
                 "attributes": {
@@ -228,14 +274,14 @@
                   ]
                 },
                 "children": [],
-                "id": 1051,
+                "id": 1433,
                 "name": "ParameterList",
-                "src": "146:0:2"
+                "src": "89:0:2"
               }
             ],
-            "id": 1052,
+            "id": 1434,
             "name": "FunctionDefinition",
-            "src": "114:33:2"
+            "src": "57:33:2"
           },
           {
             "attributes": {
@@ -250,7 +296,7 @@
               ],
               "name": "withdrawLiquidity",
               "overrides": null,
-              "scope": 1056,
+              "scope": 1444,
               "stateMutability": "nonpayable",
               "virtual": false,
               "visibility": "external"
@@ -263,9 +309,9 @@
                   ]
                 },
                 "children": [],
-                "id": 1053,
+                "id": 1435,
                 "name": "ParameterList",
-                "src": "176:2:2"
+                "src": "119:2:2"
               },
               {
                 "attributes": {
@@ -274,24 +320,116 @@
                   ]
                 },
                 "children": [],
-                "id": 1054,
+                "id": 1436,
                 "name": "ParameterList",
-                "src": "187:0:2"
+                "src": "130:0:2"
               }
             ],
-            "id": 1055,
+            "id": 1437,
             "name": "FunctionDefinition",
-            "src": "150:38:2"
+            "src": "93:38:2"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "functionSelector": "7c587b22",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "swapYourTokenForDummyToken",
+              "overrides": null,
+              "scope": 1444,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1438,
+                "name": "ParameterList",
+                "src": "169:2:2"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1439,
+                "name": "ParameterList",
+                "src": "180:0:2"
+              }
+            ],
+            "id": 1440,
+            "name": "FunctionDefinition",
+            "src": "134:47:2"
+          },
+          {
+            "attributes": {
+              "body": null,
+              "documentation": null,
+              "functionSelector": "c4a85993",
+              "implemented": false,
+              "isConstructor": false,
+              "kind": "function",
+              "modifiers": [
+                null
+              ],
+              "name": "swapYourTokenForEth",
+              "overrides": null,
+              "scope": 1444,
+              "stateMutability": "nonpayable",
+              "virtual": false,
+              "visibility": "external"
+            },
+            "children": [
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1441,
+                "name": "ParameterList",
+                "src": "212:2:2"
+              },
+              {
+                "attributes": {
+                  "parameters": [
+                    null
+                  ]
+                },
+                "children": [],
+                "id": 1442,
+                "name": "ParameterList",
+                "src": "223:0:2"
+              }
+            ],
+            "id": 1443,
+            "name": "FunctionDefinition",
+            "src": "184:40:2"
           }
         ],
-        "id": 1056,
+        "id": 1444,
         "name": "ContractDefinition",
-        "src": "82:108:2"
+        "src": "25:201:2"
       }
     ],
-    "id": 1057,
+    "id": 1445,
     "name": "SourceUnit",
-    "src": "0:191:2"
+    "src": "0:227:2"
   },
   "compiler": {
     "name": "solc",
@@ -299,7 +437,7 @@
   },
   "networks": {},
   "schemaVersion": "3.3.4",
-  "updatedAt": "2021-12-02T16:31:32.287Z",
+  "updatedAt": "2021-12-03T09:23:17.419Z",
   "devdoc": {
     "methods": {}
   },
