@@ -76,8 +76,8 @@ Extra points if you find bugs / corrections this TD can benefit from, and submit
 - Publish the code of the Evaluator on Etherscan using the "Verify and publish" functionnality 
 
 ## TD addresses
-- Points contracts `0xA59ADfDa4691B834c9b5bB169D5D0ee16e7D4c37`
-- Evaluator `0xb6eB42E175a8F0471bF4f7694f90cF629a0117bf`
+- Points contracts `0xC366a0CDcdcD2E0C3141acDC8302f0fCa53848a3`
+- Evaluator `0x34342dE8bDFd22228350e65376109123CF1Bd7E8`
 
 ## Installing
 
