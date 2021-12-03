@@ -27,7 +27,7 @@ Your objective is to gather as many TD-AMM-101 points as possible. Please note :
 - Configure a seed for deployment of contracts in your truffle config file
 - Register for an infura key and set it up in your truffle config file
 - Download and launch Ganache
-- Test that you are able to connect to the rinkeby network with `truffle console`
+- Test that you are able to connect to the ganache network with `truffle console`
 - Test that you are able to connect to the rinkeby network with `truffle console --network rinkeby`
 - To deploy a contract, configure a migration in the [migration folder](migrations). Look at the way the TD is deploy and try to iterate
 - Test your deployment in Ganache `truffle migrate`
