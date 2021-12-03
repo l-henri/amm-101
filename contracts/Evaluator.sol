@@ -12,8 +12,8 @@ contract Evaluator
 
 	mapping(address => bool) public teachers;
 	ERC20TD public TDAMM;
-	ERC20 public dummyToken;
 
+	ERC20 public dummyToken;
 	IUniswapV2Factory public uniswapV2Factory;
 	address public WETH;
 
@@ -91,9 +91,9 @@ contract Evaluator
 		}
 
 		// Crediting points
-		if (!exerciceProgression[msg.sender][4])
+		if (!exerciceProgression[msg.sender][5])
 		{
-			exerciceProgression[msg.sender][4] = true;
+			exerciceProgression[msg.sender][5] = true;
 			TDAMM.distributeTokens(msg.sender, 2);
 		}
 	}
@@ -102,10 +102,7 @@ contract Evaluator
 	public
 	{
 		// Checking ticker and supply were received
-		require(exerciceProgression[msg.sender][1]);
-
-		// Checking exercice was submitted
-		require(exerciceProgression[msg.sender][0]);
+		require(exerciceProgression[msg.sender][5]);
 
 		// Checking ticker was set properly
 		require(_compareStrings(assignedTicker[msg.sender], studentErc20[msg.sender].symbol()), "Incorrect ticker");
@@ -226,8 +223,11 @@ contract Evaluator
 	function submitErc20(IRichERC20 studentErc20_)
 	public
 	{
+		// Checking this contract was not used by another group before
+		require(!hasBeenPaired[address(studentErc20_)]);
 		// Assigning passed ERC20 as student ERC20
 		studentErc20[msg.sender] = studentErc20_;
+		hasBeenPaired[address(studentErc20_)] = true;
 			
 	}
 
