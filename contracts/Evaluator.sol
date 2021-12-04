@@ -154,7 +154,7 @@ contract Evaluator
 		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
 
 		// Checking caller balance before executing contract
-		uint initBalance = studentErc20[msg.sender].balanceOf(studentExercice[msg.sender]);
+		uint initBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
 
 		// Calling student contract to tell him to provide liquidity
 		studentExercice[msg.sender].swapYourTokenForEth();
@@ -164,7 +164,7 @@ contract Evaluator
 		require((reserve0 != reserve3) && (reserve1 != reserve4), "No liquidity change in your token's pool");
 
 		// Checking your token balance after calling the exercice
-		uint endBalance = studentErc20[msg.sender].balanceOf(studentExercice[msg.sender]);
+		uint endBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
 		require(initBalance != endBalance, "You still have the same amount of tokens");
 
 		// Crediting points
@@ -189,8 +189,8 @@ contract Evaluator
 		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
 		
 		// Checking caller balance before executing contract
-		uint initTokenBalance = studentErc20[msg.sender].balanceOf(studentExercice[msg.sender]);
-		uint initDummyBalance = dummyToken.balanceOf(studentExercice[msg.sender]);
+		uint initTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
+		uint initDummyBalance = dummyToken.balanceOf(address(studentExercice[msg.sender]));
 
 		// Calling student contract to tell him to provide liquidity
 		studentExercice[msg.sender].swapYourTokenForDummyToken();
@@ -200,9 +200,9 @@ contract Evaluator
 		require((reserve0 < reserve3) && (reserve1 < reserve4), "No liquidity change in your token's pool");
 
 		// Checking your token balance after calling the exercice
-		uint endTokenBalance = studentErc20[msg.sender].balanceOf(studentExercice[msg.sender]);
+		uint endTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
 		require(initTokenBalance != endTokenBalance, "You still have the same amount of your tokens");
-		uint endDummyBalance = dummyToken.balanceOf(studentExercice[msg.sender]);
+		uint endDummyBalance = dummyToken.balanceOf(address(studentExercice[msg.sender]));
 		require(initDummyBalance != endDummyBalance, "You still have the same amount of dummy tokens");
 
 		// Crediting points
