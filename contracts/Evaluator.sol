@@ -7,316 +7,395 @@ import "./IRichERC20.sol";
 import "./utils/IUniswapV2Factory.sol";
 import "./utils/IUniswapV2Pair.sol";
 
-contract Evaluator 
-{
+contract Evaluator {
+    mapping(address => bool) public teachers;
+    ERC20TD public TDAMM;
 
-	mapping(address => bool) public teachers;
-	ERC20TD public TDAMM;
+    ERC20 public dummyToken;
+    IUniswapV2Factory public uniswapV2Factory;
+    address public WETH;
 
-	ERC20 public dummyToken;
-	IUniswapV2Factory public uniswapV2Factory;
-	address public WETH;
+    uint256[20] private randomSupplies;
+    string[20] private randomTickers;
+    uint256 public nextValueStoreRank;
 
-	uint256[20] private randomSupplies;
-	string[20] private randomTickers;
- 	uint public nextValueStoreRank;
+    mapping(address => string) public assignedTicker;
+    mapping(address => uint256) public assignedSupply;
+    mapping(address => mapping(uint256 => bool)) public exerciceProgression;
+    mapping(address => IRichERC20) public studentErc20;
+    mapping(address => IExerciceSolution) public studentExercice;
+    mapping(address => bool) public hasBeenPaired;
 
- 	mapping(address => string) public assignedTicker;
- 	mapping(address => uint256) public assignedSupply;
- 	mapping(address => mapping(uint256 => bool)) public exerciceProgression;
- 	mapping(address => IRichERC20) public studentErc20;
- 	mapping(address => IExerciceSolution) public studentExercice;
- 	mapping(address => bool) public hasBeenPaired;
+    event newRandomTickerAndSupply(string ticker, uint256 supply);
+    event constructedCorrectly(
+        address erc20Address,
+        address dummyTokenAddress,
+        address uniFactoryAddress,
+        address wethAddress
+    );
 
- 	event newRandomTickerAndSupply(string ticker, uint256 supply);
- 	event constructedCorrectly(address erc20Address, address dummyTokenAddress, address uniFactoryAddress, address wethAddress);
-	constructor(ERC20TD _TDAMM, ERC20 _dummyToken, IUniswapV2Factory _uniswapV2Factory, address _WETH) 
-	public 
-	{
-		TDAMM = _TDAMM;
-		dummyToken = _dummyToken;
-		uniswapV2Factory = _uniswapV2Factory;
-		WETH = _WETH;
-		emit constructedCorrectly(address(TDAMM), address(_dummyToken), address(_uniswapV2Factory), _WETH);
+    constructor(
+        ERC20TD _TDAMM,
+        ERC20 _dummyToken,
+        IUniswapV2Factory _uniswapV2Factory,
+        address _WETH
+    ) public {
+        TDAMM = _TDAMM;
+        dummyToken = _dummyToken;
+        uniswapV2Factory = _uniswapV2Factory;
+        WETH = _WETH;
+        emit constructedCorrectly(
+            address(TDAMM),
+            address(_dummyToken),
+            address(_uniswapV2Factory),
+            _WETH
+        );
+    }
 
-	}
+    fallback() external payable {}
 
-	fallback () external payable 
-	{}
+    receive() external payable {}
 
-	receive () external payable 
-	{}
+    function ex1_showIHaveTokens() public {
+        require(
+            dummyToken.balanceOf(msg.sender) > 0,
+            "You do not hold dummyTokens. Buy them on Uniswap"
+        );
 
-	function ex1_showIHaveTokens()
-	public
-	{
-		require(dummyToken.balanceOf(msg.sender) > 0, "You do not hold dummyTokens. Buy them on Uniswap");
+        if (!exerciceProgression[msg.sender][1]) {
+            exerciceProgression[msg.sender][1] = true;
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-		if (!exerciceProgression[msg.sender][1])
-		{
-			exerciceProgression[msg.sender][1] = true;
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
+    function ex2_showIProvidedLiquidity() public {
+        // Getting address from factory for pair dummyToken / WETH
+        (address token0, address token1) = address(dummyToken) < WETH
+            ? (address(dummyToken), WETH)
+            : (WETH, address(dummyToken));
+        address dummyTokenAndWethPair = uniswapV2Factory.getPair(
+            token0,
+            token1
+        );
 
-	}
+        // Checking if caller holds LP token
+        ERC20 dummyTokenAndWethPairAsERC20 = ERC20(dummyTokenAndWethPair);
+        require(
+            dummyTokenAndWethPairAsERC20.balanceOf(msg.sender) > 0,
+            "You do not hold liquidity in the required pool"
+        );
+        if (!exerciceProgression[msg.sender][2]) {
+            exerciceProgression[msg.sender][2] = true;
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-	function ex2_showIProvidedLiquidity()
-	public
-	{
-		// Getting address from factory for pair dummyToken / WETH
-		(address token0, address token1) = address(dummyToken) < WETH ? (address(dummyToken), WETH) : (WETH, address(dummyToken));
-		address dummyTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+    function ex6a_getTickerAndSupply() public {
+        assignedSupply[msg.sender] =
+            randomSupplies[nextValueStoreRank] *
+            1000000000000000000;
+        // assignedTicker[msg.sender] = bytes32ToString(randomTickers[nextValueStoreRank]);
+        assignedTicker[msg.sender] = randomTickers[nextValueStoreRank];
 
-		// Checking if caller holds LP token
-		ERC20 dummyTokenAndWethPairAsERC20 = ERC20(dummyTokenAndWethPair);
-		require(dummyTokenAndWethPairAsERC20.balanceOf(msg.sender) > 0, "You do not hold liquidity in the required pool");
-		if (!exerciceProgression[msg.sender][2])
-		{
-			exerciceProgression[msg.sender][2] = true;
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
-	}
+        nextValueStoreRank += 1;
+        if (nextValueStoreRank >= 20) {
+            nextValueStoreRank = 0;
+        }
 
-	function ex6a_getTickerAndSupply()
-	public
-	{
-		assignedSupply[msg.sender] = randomSupplies[nextValueStoreRank]*1000000000000000000;
-		// assignedTicker[msg.sender] = bytes32ToString(randomTickers[nextValueStoreRank]);
-		assignedTicker[msg.sender] = randomTickers[nextValueStoreRank];
+        // Crediting points
+        if (!exerciceProgression[msg.sender][5]) {
+            exerciceProgression[msg.sender][5] = true;
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-		nextValueStoreRank += 1;
-		if (nextValueStoreRank >= 20)
-		{
-			nextValueStoreRank = 0;
-		}
+    function ex6b_testErc20TickerAndSupply() public {
+        // Checking ticker and supply were received
+        require(exerciceProgression[msg.sender][5]);
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][5])
-		{
-			exerciceProgression[msg.sender][5] = true;
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
-	}
+        // Checking ticker was set properly
+        require(
+            _compareStrings(
+                assignedTicker[msg.sender],
+                studentErc20[msg.sender].symbol()
+            ),
+            "Incorrect ticker"
+        );
+        // Checking supply was set properly
+        require(
+            assignedSupply[msg.sender] ==
+                studentErc20[msg.sender].totalSupply(),
+            "Incorrect supply"
+        );
+        // Checking some ERC20 functions were created
+        require(
+            studentErc20[msg.sender].allowance(address(this), msg.sender) == 0,
+            "Allowance not implemented or incorrectly set"
+        );
+        require(
+            studentErc20[msg.sender].balanceOf(address(this)) == 0,
+            "BalanceOf not implemented or incorrectly set"
+        );
+        require(
+            studentErc20[msg.sender].approve(msg.sender, 10),
+            "Approve not implemented"
+        );
 
-	function ex6b_testErc20TickerAndSupply()
-	public
-	{
-		// Checking ticker and supply were received
-		require(exerciceProgression[msg.sender][5]);
+        // Crediting points
+        if (!exerciceProgression[msg.sender][6]) {
+            exerciceProgression[msg.sender][6] = true;
+            // Creating ERC20
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-		// Checking ticker was set properly
-		require(_compareStrings(assignedTicker[msg.sender], studentErc20[msg.sender].symbol()), "Incorrect ticker");
-		// Checking supply was set properly
-		require(assignedSupply[msg.sender] == studentErc20[msg.sender].totalSupply(), "Incorrect supply");
-		// Checking some ERC20 functions were created
-		require(studentErc20[msg.sender].allowance(address(this), msg.sender) == 0, "Allowance not implemented or incorrectly set");
-		require(studentErc20[msg.sender].balanceOf(address(this)) == 0, "BalanceOf not implemented or incorrectly set");
-		require(studentErc20[msg.sender].approve(msg.sender, 10), "Approve not implemented");
+    function ex7_tokenIsTradableOnUniswap() public {
+        // Retrieving address of pair from library
+        (address token0, address token1) = address(studentErc20[msg.sender]) <
+            WETH
+            ? (address(studentErc20[msg.sender]), WETH)
+            : (WETH, address(studentErc20[msg.sender]));
+        address studentTokenAndWethPair = uniswapV2Factory.getPair(
+            token0,
+            token1
+        );
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][6])
-		{
-			exerciceProgression[msg.sender][6] = true;
-			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
+        require(studentTokenAndWethPair != address(0));
 
-	}
+        // Crediting points
+        if (!exerciceProgression[msg.sender][7]) {
+            exerciceProgression[msg.sender][7] = true;
+            // Creating ERC20
+            TDAMM.distributeTokens(msg.sender, 5);
+        }
+    }
 
-	function ex7_tokenIsTradableOnUniswap()
-	public
-	{
-		// Retrieving address of pair from library
-		(address token0, address token1) = address(studentErc20[msg.sender]) < WETH ? (address(studentErc20[msg.sender]), WETH) : (WETH, address(studentErc20[msg.sender]));
-		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+    function ex8_contractCanSwapVsEth() public {
+        // Retrieving address of pair from library
+        (address token0, address token1) = address(studentErc20[msg.sender]) <
+            WETH
+            ? (address(studentErc20[msg.sender]), WETH)
+            : (WETH, address(studentErc20[msg.sender]));
+        address studentTokenAndWethPair = uniswapV2Factory.getPair(
+            token0,
+            token1
+        );
 
-		require(studentTokenAndWethPair != address(0));
+        // Checking pair balance before calling exercice contract
+        IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(
+            studentTokenAndWethPair
+        );
+        (uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance
+            .getReserves();
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][7])
-		{
-			exerciceProgression[msg.sender][7] = true;
-			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 5);
-		}
+        // Checking caller balance before executing contract
+        uint256 initBalance = studentErc20[msg.sender].balanceOf(
+            address(studentExercice[msg.sender])
+        );
 
-	}
+        // Calling student contract to tell him to provide liquidity
+        studentExercice[msg.sender].swapYourTokenForEth();
 
-	function ex8_contractCanSwapVsEth()
-	public
-	{
-		// Retrieving address of pair from library
-		(address token0, address token1) = address(studentErc20[msg.sender]) < WETH ? (address(studentErc20[msg.sender]), WETH) : (WETH, address(studentErc20[msg.sender]));
-		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+        // Checking pair balance after calling exercice contract
+        (uint112 reserve3, uint112 reserve4, ) = studentTokenAndWethPairInstance
+            .getReserves();
+        require(
+            (reserve0 != reserve3) && (reserve1 != reserve4),
+            "No liquidity change in your token's pool"
+        );
 
-		// Checking pair balance before calling exercice contract
-		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
-		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
+        // Checking your token balance after calling the exercice
+        uint256 endBalance = studentErc20[msg.sender].balanceOf(
+            address(studentExercice[msg.sender])
+        );
+        require(
+            initBalance != endBalance,
+            "You still have the same amount of tokens"
+        );
 
-		// Checking caller balance before executing contract
-		uint initBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
+        // Crediting points
+        if (!exerciceProgression[msg.sender][8]) {
+            exerciceProgression[msg.sender][8] = true;
+            // Creating ERC20
+            TDAMM.distributeTokens(msg.sender, 1);
+        }
+    }
 
-		// Calling student contract to tell him to provide liquidity
-		studentExercice[msg.sender].swapYourTokenForEth();
+    function ex9_contractCanSwapVsDummyToken() public {
+        // Retrieving address of pair from library
+        (address token0, address token1) = address(studentErc20[msg.sender]) <
+            address(dummyToken)
+            ? (address(studentErc20[msg.sender]), address(dummyToken))
+            : (address(dummyToken), address(studentErc20[msg.sender]));
+        address studentTokenAndWethPair = uniswapV2Factory.getPair(
+            token0,
+            token1
+        );
 
-		// Checking pair balance after calling exercice contract
-		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
-		require((reserve0 != reserve3) && (reserve1 != reserve4), "No liquidity change in your token's pool");
+        // Checking pair balance before calling exercice contract
+        IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(
+            studentTokenAndWethPair
+        );
+        (uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance
+            .getReserves();
 
-		// Checking your token balance after calling the exercice
-		uint endBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
-		require(initBalance != endBalance, "You still have the same amount of tokens");
+        // Checking caller balance before executing contract
+        uint256 initTokenBalance = studentErc20[msg.sender].balanceOf(
+            address(studentExercice[msg.sender])
+        );
+        uint256 initDummyBalance = dummyToken.balanceOf(
+            address(studentExercice[msg.sender])
+        );
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][8])
-		{
-			exerciceProgression[msg.sender][8] = true;
-			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 1);
-		}
+        // Calling student contract to tell him to provide liquidity
+        studentExercice[msg.sender].swapYourTokenForDummyToken();
 
-	}
+        // Checking pair balance after calling exercice contract
+        (uint112 reserve3, uint112 reserve4, ) = studentTokenAndWethPairInstance
+            .getReserves();
+        require(
+            (reserve0 != reserve3) && (reserve1 != reserve4),
+            "No liquidity change in your token's pool"
+        );
 
-	function ex9_contractCanSwapVsDummyToken()
-	public
-	{
-		// Retrieving address of pair from library
-		(address token0, address token1) = address(studentErc20[msg.sender]) < address(dummyToken) ? (address(studentErc20[msg.sender]), address(dummyToken)) : (address(dummyToken), address(studentErc20[msg.sender]));
-		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+        // Checking your token balance after calling the exercice
+        uint256 endTokenBalance = studentErc20[msg.sender].balanceOf(
+            address(studentExercice[msg.sender])
+        );
+        require(
+            initTokenBalance != endTokenBalance,
+            "You still have the same amount of your tokens"
+        );
+        uint256 endDummyBalance = dummyToken.balanceOf(
+            address(studentExercice[msg.sender])
+        );
+        require(
+            initDummyBalance != endDummyBalance,
+            "You still have the same amount of dummy tokens"
+        );
 
-		// Checking pair balance before calling exercice contract
-		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
-		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
-		
-		// Checking caller balance before executing contract
-		uint initTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
-		uint initDummyBalance = dummyToken.balanceOf(address(studentExercice[msg.sender]));
+        // Crediting points
+        if (!exerciceProgression[msg.sender][9]) {
+            exerciceProgression[msg.sender][9] = true;
+            // Creating ERC20
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-		// Calling student contract to tell him to provide liquidity
-		studentExercice[msg.sender].swapYourTokenForDummyToken();
+    function ex10_contractCanProvideLiquidity() public {
+        // Retrieving address of pair from library
+        (address token0, address token1) = address(studentErc20[msg.sender]) <
+            WETH
+            ? (address(studentErc20[msg.sender]), WETH)
+            : (WETH, address(studentErc20[msg.sender]));
+        address studentTokenAndWethPair = uniswapV2Factory.getPair(
+            token0,
+            token1
+        );
 
-		// Checking pair balance after calling exercice contract
-		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
-		require((reserve0 < reserve3) && (reserve1 < reserve4), "No liquidity change in your token's pool");
+        // Checking pair balance before calling exercice contract
+        IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(
+            studentTokenAndWethPair
+        );
+        (uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance
+            .getReserves();
 
-		// Checking your token balance after calling the exercice
-		uint endTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
-		require(initTokenBalance != endTokenBalance, "You still have the same amount of your tokens");
-		uint endDummyBalance = dummyToken.balanceOf(address(studentExercice[msg.sender]));
-		require(initDummyBalance != endDummyBalance, "You still have the same amount of dummy tokens");
+        // Calling student contract to tell him to provide liquidity
+        studentExercice[msg.sender].addLiquidity();
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][9])
-		{
-			exerciceProgression[msg.sender][9] = true;
-			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
+        // Checking pair balance after calling exercice contract
+        (uint112 reserve3, uint112 reserve4, ) = studentTokenAndWethPairInstance
+            .getReserves();
 
-	}
-	function ex10_contractCanProvideLiquidity()
-	public
-	{
-		// Retrieving address of pair from library
-		(address token0, address token1) = address(studentErc20[msg.sender]) < WETH ? (address(studentErc20[msg.sender]), WETH) : (WETH, address(studentErc20[msg.sender]));
-		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+        require(
+            (reserve0 < reserve3) && (reserve1 < reserve4),
+            "No liquidity change in your token's pool"
+        );
 
-		// Checking pair balance before calling exercice contract
-		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
-		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
+        // Crediting points
+        if (!exerciceProgression[msg.sender][10]) {
+            exerciceProgression[msg.sender][10] = true;
+            // Creating ERC20
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-		// Calling student contract to tell him to provide liquidity
-		studentExercice[msg.sender].addLiquidity();
+    function ex11_contractCanWithdrawLiquidity() public {
+        // Retrieving address of pair from library
+        (address token0, address token1) = address(studentErc20[msg.sender]) <
+            WETH
+            ? (address(studentErc20[msg.sender]), WETH)
+            : (WETH, address(studentErc20[msg.sender]));
+        address studentTokenAndWethPair = uniswapV2Factory.getPair(
+            token0,
+            token1
+        );
 
-		// Checking pair balance after calling exercice contract
-		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
+        // Checking pair balance before calling exercice contract
+        IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(
+            studentTokenAndWethPair
+        );
+        (uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance
+            .getReserves();
 
-		require((reserve0 < reserve3) && (reserve1 < reserve4), "No liquidity change in your token's pool");
+        // Calling student contract to tell him to provide liquidity
+        studentExercice[msg.sender].withdrawLiquidity();
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][10])
-		{
-			exerciceProgression[msg.sender][10] = true;
-			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
+        // Checking pair balance after calling exercice contract
+        (uint112 reserve3, uint112 reserve4, ) = studentTokenAndWethPairInstance
+            .getReserves();
 
-	}
+        require(
+            (reserve0 > reserve3) && (reserve1 > reserve4),
+            "No liquidity change in your token's pool"
+        );
 
-	function ex11_contractCanWithdrawLiquidity()
-	public
-	{
-		// Retrieving address of pair from library
-		(address token0, address token1) = address(studentErc20[msg.sender]) < WETH ? (address(studentErc20[msg.sender]), WETH) : (WETH, address(studentErc20[msg.sender]));
-		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+        // Crediting points
+        if (!exerciceProgression[msg.sender][11]) {
+            exerciceProgression[msg.sender][11] = true;
+            // Creating ERC20
+            TDAMM.distributeTokens(msg.sender, 2);
+        }
+    }
 
-		// Checking pair balance before calling exercice contract
-		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
-		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
+    modifier onlyTeachers() {
+        require(TDAMM.teachers(msg.sender));
+        _;
+    }
 
-		// Calling student contract to tell him to provide liquidity
-		studentExercice[msg.sender].withdrawLiquidity();
+    function submitExercice(IExerciceSolution studentExercice_) public {
+        // Checking this contract was not used by another group before
+        require(!hasBeenPaired[address(studentExercice_)]);
 
-		// Checking pair balance after calling exercice contract
-		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
+        // Assigning passed ERC20 as student ERC20
+        studentExercice[msg.sender] = studentExercice_;
+        hasBeenPaired[address(studentExercice_)] = true;
+    }
 
-		require((reserve0 > reserve3) && (reserve1 > reserve4), "No liquidity change in your token's pool");
+    function submitErc20(IRichERC20 studentErc20_) public {
+        // Checking this contract was not used by another group before
+        require(!hasBeenPaired[address(studentErc20_)]);
+        // Assigning passed ERC20 as student ERC20
+        studentErc20[msg.sender] = studentErc20_;
+        hasBeenPaired[address(studentErc20_)] = true;
+    }
 
-		// Crediting points
-		if (!exerciceProgression[msg.sender][11])
-		{
-			exerciceProgression[msg.sender][11] = true;
-			// Creating ERC20
-			TDAMM.distributeTokens(msg.sender, 2);
-		}
+    function _compareStrings(string memory a, string memory b)
+        internal
+        pure
+        returns (bool)
+    {
+        return (keccak256(abi.encodePacked((a))) ==
+            keccak256(abi.encodePacked((b))));
+    }
 
-	}
-
-
-	modifier onlyTeachers() 
-	{
-
-	    require(TDAMM.teachers(msg.sender));
-	    _;
-	}
-
-	function submitExercice(IExerciceSolution studentExercice_)
-	public
-	{
-		// Checking this contract was not used by another group before
-		require(!hasBeenPaired[address(studentExercice_)]);
-
-		// Assigning passed ERC20 as student ERC20
-		studentExercice[msg.sender] = studentExercice_;
-		hasBeenPaired[address(studentExercice_)] = true;
-			
-	}
-
-	function submitErc20(IRichERC20 studentErc20_)
-	public
-	{
-		// Checking this contract was not used by another group before
-		require(!hasBeenPaired[address(studentErc20_)]);
-		// Assigning passed ERC20 as student ERC20
-		studentErc20[msg.sender] = studentErc20_;
-		hasBeenPaired[address(studentErc20_)] = true;
-			
-	}
-
-	function _compareStrings(string memory a, string memory b) 
-	internal 
-	pure 
-	returns (bool) 
-	{
-    	return (keccak256(abi.encodePacked((a))) == keccak256(abi.encodePacked((b))));
-	}
-
-	function bytes32ToString(bytes32 _bytes32) 
-	public 
-	pure returns (string memory) 
-	{
+    function bytes32ToString(bytes32 _bytes32)
+        public
+        pure
+        returns (string memory)
+    {
         uint8 i = 0;
-        while(i < 32 && _bytes32[i] != 0) {
+        while (i < 32 && _bytes32[i] != 0) {
             i++;
         }
         bytes memory bytesArray = new bytes(i);
@@ -326,36 +405,27 @@ contract Evaluator
         return string(bytesArray);
     }
 
-	function readTicker(address studentAddres)
-	public
-	view
-	returns(string memory)
-	{
-		return assignedTicker[studentAddres];
-	}
+    function readTicker(address studentAddres)
+        public
+        view
+        returns (string memory)
+    {
+        return assignedTicker[studentAddres];
+    }
 
-	function readSupply(address studentAddres)
-	public
-	view
-	returns(uint256)
-	{
-		return assignedSupply[studentAddres];
-	}
+    function readSupply(address studentAddres) public view returns (uint256) {
+        return assignedSupply[studentAddres];
+    }
 
-	function setRandomTickersAndSupply(uint256[20] memory _randomSupplies, string[20] memory _randomTickers) 
-	public 
-	onlyTeachers
-	{
-		randomSupplies = _randomSupplies;
-		randomTickers = _randomTickers;
-		nextValueStoreRank = 0;
-		for (uint i = 0; i < 20; i++)
-		{
-			emit newRandomTickerAndSupply(randomTickers[i], randomSupplies[i]);
-		}
-	}
-
-
-
-
+    function setRandomTickersAndSupply(
+        uint256[20] memory _randomSupplies,
+        string[20] memory _randomTickers
+    ) public onlyTeachers {
+        randomSupplies = _randomSupplies;
+        randomTickers = _randomTickers;
+        nextValueStoreRank = 0;
+        for (uint256 i = 0; i < 20; i++) {
+            emit newRandomTickerAndSupply(randomTickers[i], randomSupplies[i]);
+        }
+    }
 }
