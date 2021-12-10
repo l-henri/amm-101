@@ -197,7 +197,7 @@ contract Evaluator
 
 		// Checking pair balance after calling exercice contract
 		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
-		require((reserve0 < reserve3) && (reserve1 < reserve4), "No liquidity change in your token's pool");
+		require((reserve0 != reserve3) && (reserve1 != reserve4), "No liquidity change in your token's pool");
 
 		// Checking your token balance after calling the exercice
 		uint endTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
