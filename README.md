@@ -8,7 +8,7 @@ It is aimed at developpers that are familiar with Solidity and ERC20
 ### Introduction
 The TD has three components:
 - An ERC20 token, ticker TD-AMM-101, that is used to keep track of points 
-- An evaluator contract, that is able to mint and distribute TD-ERC20-101 points
+- An evaluator contract, that is able to mint and distribute TD-AMM-101 points
 - A dummy ERC20 token that you'll trade in the beginning of the workshop
 
 Your objective is to gather as many TD-AMM-101 points as possible. Please note :
