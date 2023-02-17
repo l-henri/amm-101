@@ -180,13 +180,19 @@ contract Evaluator
 	function ex9_contractCanSwapVsDummyToken()
 	public
 	{
-		// Retrieving address of pair from library
-		(address token0, address token1) = address(studentErc20[msg.sender]) < address(dummyToken) ? (address(studentErc20[msg.sender]), address(dummyToken)) : (address(dummyToken), address(studentErc20[msg.sender]));
+		// Retrieving address of the first pair from library
+		(address token0, address token1) = address(studentErc20[msg.sender]) < WETH ? (address(studentErc20[msg.sender]), WETH) : (WETH, address(studentErc20[msg.sender]));
 		address studentTokenAndWethPair = uniswapV2Factory.getPair(token0, token1);
+
+		// Retrieving address of the second pair from library
+		(address token2, address token3) = WETH < address(dummyToken) ? (WETH, address(dummyToken)) : (address(dummyToken), WETH);
+		address dummyTokenAndWethPair = uniswapV2Factory.getPair(token2, token3);
 
 		// Checking pair balance before calling exercice contract
 		IUniswapV2Pair studentTokenAndWethPairInstance = IUniswapV2Pair(studentTokenAndWethPair);
-		(uint112 reserve0, uint112 reserve1, ) = studentTokenAndWethPairInstance.getReserves();
+		IUniswapV2Pair dummyTokenAndWethPairInstance = IUniswapV2Pair(dummyTokenAndWethPair);
+		(uint112 reserve00, uint112 reserve01, ) = studentTokenAndWethPairInstance.getReserves();
+		(uint112 reserve10, uint112 reserve11, ) = dummyTokenAndWethPairInstance.getReserves();
 		
 		// Checking caller balance before executing contract
 		uint initTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
@@ -196,8 +202,10 @@ contract Evaluator
 		studentExercice[msg.sender].swapYourTokenForDummyToken();
 
 		// Checking pair balance after calling exercice contract
-		(uint112 reserve3, uint112 reserve4,) = studentTokenAndWethPairInstance.getReserves();
-		require((reserve0 != reserve3) && (reserve1 != reserve4), "No liquidity change in your token's pool");
+		(uint112 reserve03, uint112 reserve04,) = studentTokenAndWethPairInstance.getReserves();
+		(uint112 reserve13, uint112 reserve14,) = dummyTokenAndWethPairInstance.getReserves();
+		require((reserve00 != reserve03) && (reserve01 != reserve04), "No liquidity change in your token's pool");
+		require((reserve10 != reserve13) && (reserve11 != reserve14), "No liquidity change in dummy token's pool");
 
 		// Checking your token balance after calling the exercice
 		uint endTokenBalance = studentErc20[msg.sender].balanceOf(address(studentExercice[msg.sender]));
