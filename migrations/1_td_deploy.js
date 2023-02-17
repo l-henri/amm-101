@@ -52,3 +52,8 @@ async function deployRecap(deployer, network, accounts) {
 }
 
 
+
+// truffle run verify ERC20TD@0xC23563f0D0b4cD110b561DaBd707539AFf99a42C --network goerli 
+// truffle run verify DummyToken@0x0CA2F5Ff2a0bB722f8903A26ae442bAFDD26Eb43 --network goerli 
+// truffle run verify Evaluator@0xF468D9B2d1D901B01147179baF8526de39a59d6B --network goerli 
+
