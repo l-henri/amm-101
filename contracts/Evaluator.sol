@@ -1,4 +1,5 @@
-pragma solidity ^0.6.0;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.9;
 pragma experimental ABIEncoderV2;
 
 import "./ERC20TD.sol";
@@ -31,7 +32,6 @@ contract Evaluator
  	event newRandomTickerAndSupply(string ticker, uint256 supply);
  	event constructedCorrectly(address erc20Address, address dummyTokenAddress, address uniFactoryAddress, address wethAddress);
 	constructor(ERC20TD _TDAMM, ERC20 _dummyToken, IUniswapV2Factory _uniswapV2Factory, address _WETH) 
-	public 
 	{
 		TDAMM = _TDAMM;
 		dummyToken = _dummyToken;
