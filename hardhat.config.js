@@ -1,21 +1,21 @@
-require("@nomicfoundation/hardhat-toolbox");
-require('dotenv').config()
+const { mnemonic, infuraApiKey, etherscanApiKey } = require('./secrets.json');
+require("@nomiclabs/hardhat-waffle");
+require("@nomiclabs/hardhat-etherscan");
 
-/** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
   networks: {
     hardhat: {
     },
     goerli: {
-      url: "https://goerli.infura.io/v3/" + process.env.infura,
+      url: `https://goerli.infura.io/v3/${infuraApiKey}`,
       accounts: {
-        mnemonic: process.env.mnemonic
+        mnemonic: mnemonic
       }
     },
     sepolia: {
-      url: "https://sepolia.infura.io/v3/" + process.env.infura,
+      url: `https://sepolia.infura.io/v3/${infuraApiKey}`,
       accounts: {
-        mnemonic: process.env.mnemonic
+        mnemonic: mnemonic
       }
     }
   },
@@ -29,6 +29,6 @@ module.exports = {
     }
   },
   etherscan: {
-    apiKey: process.env.etherscan,
+    apiKey: etherscanApiKey,
   },
 };
