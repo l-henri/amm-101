@@ -1,5 +1,5 @@
 node_modules
-.env
-artifacts/
-*DS_Store* 
-cache/
+*2_td_test.js*
+secrets.json
+package.json
+package-lock.json
